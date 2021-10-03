@@ -5,6 +5,7 @@ metadata:
 provisioner: kubernetes.io/no-provisioner
 volumeBindingMode: WaitForFirstConsumer
 
+# creation of persistent colume on the node
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -16,7 +17,7 @@ spec:
   storageClassName: local-storage
   claimRef:
     name: jenkins-pv-claim
-    namespace: devops-tools
+    namespace: jenkins
   capacity:
     storage: 10Gi
   accessModes:
@@ -29,9 +30,10 @@ spec:
       - matchExpressions:
         - key: kubernetes.io/hostname
           operator: In
+# Replace worker to any node's hostname
           values:
           - worker-node01
-
+# Claiming the persistent volume created
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -44,4 +46,4 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 3Gi
+      storage: 10Gi
